@@ -6,36 +6,36 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 // Interfaces for request parameters
-interface ChatRequest {
+export interface ChatRequest {
   prompt: string;
   src_lang: string;
   tgt_lang: string;
 }
 
-interface VisionRequest {
+export interface VisionRequest {
   file_path: string;
   query: string;
   src_lang: string;
   tgt_lang: string;
 }
 
-interface ASRRequest {
+export interface ASRRequest {
   file_path: string;
   language: string;
 }
 
-interface TTSRequest {
+export interface TTSRequest {
   input: string;
   response_format?: 'mp3' | 'wav';
 }
 
-interface TranslateRequest {
+export interface TranslateRequest {
   sentences: string[];
   src_lang: string;
   tgt_lang: string;
 }
 
-interface DocumentsRequest {
+export interface DocumentsRequest {
   file_path: string;
   page_number: number;
   src_lang: string;
@@ -43,7 +43,7 @@ interface DocumentsRequest {
 }
 
 // Interface for API responses (generic, as exact response shape may vary)
-interface ApiResponse {
+export interface ApiResponse {
   [key: string]: any;
 }
 
@@ -55,7 +55,7 @@ class DwaniConfig {
 
   constructor() {
     this.apiKey = process.env.DWANI_API_KEY || null;
-    this.apiBase = process.env.DWANI_API_BASE_URL || 'https://api.dwani.ai_123';
+    this.apiBase = process.env.DWANI_API_BASE_URL || 'https://dwani.aip.dwani.123';
     this.client = axios.create({
       baseURL: this.apiBase,
       headers: {
