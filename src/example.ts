@@ -7,10 +7,11 @@ async function main() {
     const chatResponse = await dwani.Chat.create({
       prompt: 'Hello!',
       src_lang: 'eng_Latn',
-      tgt_lang: 'fra_Latn',
+      tgt_lang: 'kan_Knda',
     });
     console.log('Chat:', chatResponse);
 
+    /*
     // Vision example
     const visionResponse = await dwani.Vision.caption({
       file_path: './image.png',
@@ -42,7 +43,7 @@ async function main() {
       tgt_lang: 'spa_Latn',
     });
     console.log('Translate:', translateResponse);
-
+*/
     // Documents example
     const docResponse = await dwani.Documents.run_extract({
       file_path: './document.pdf',
@@ -54,6 +55,7 @@ async function main() {
   } catch (error: any) {
     console.error('Error:', error.message);
   }
+    
 }
 
 main();

@@ -55,11 +55,11 @@ class DwaniConfig {
 
   constructor() {
     this.apiKey = process.env.DWANI_API_KEY || null;
-    this.apiBase = process.env.DWANI_API_BASE_URL || 'https://api.dwani.ai';
+    this.apiBase = process.env.DWANI_API_BASE_URL || 'https://api.dwani.ai_123';
     this.client = axios.create({
       baseURL: this.apiBase,
       headers: {
-        'Authorization': `Bearer ${this.apiKey}`,
+        'X-API-KEY': this.apiKey,
         'Content-Type': 'application/json',
       },
     });
@@ -88,7 +88,7 @@ class Chat {
   public async create(params: ChatRequest): Promise<ApiResponse> {
     this.config.validate();
     try {
-      const response = await this.config.client.post('/chat', params);
+      const response = await this.config.client.post('/v1/indic_chat', params);
       return response.data;
     } catch (error: any) {
       throw new Error(`Chat API error: ${error.response?.data?.error || error.message}`);
