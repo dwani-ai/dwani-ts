@@ -11,16 +11,16 @@ async function main() {
     });
     console.log('Chat:', chatResponse);
 
-    /*
+    
     // Vision example
     const visionResponse = await dwani.Vision.caption({
-      file_path: './image.png',
+      file_path: './samples/image.png',
       query: 'Describe this image',
       src_lang: 'eng_Latn',
-      tgt_lang: 'deu_Latn',
+      tgt_lang: 'kan_Knda',
     });
     console.log('Vision:', visionResponse);
-
+    /*
     // ASR example
     const asrResponse = await dwani.ASR.transcribe({
       file_path: './audio.wav',
@@ -45,13 +45,16 @@ async function main() {
     console.log('Translate:', translateResponse);
 */
     // Documents example
+    /*
     const docResponse = await dwani.Documents.run_extract({
-      file_path: './document.pdf',
+      file_path: './samples/document.pdf',
       page_number: 1,
       src_lang: 'eng_Latn',
-      tgt_lang: 'ita_Latn',
+      tgt_lang: 'kan_Knda',
     });
     console.log('Documents:', docResponse);
+
+    */
   } catch (error: any) {
     console.error('Error:', error.message);
   }

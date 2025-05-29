@@ -12,13 +12,6 @@ export interface ChatRequest {
   tgt_lang: string;
 }
 
-export interface VisionRequest {
-  file_path: string;
-  query: string;
-  src_lang: string;
-  tgt_lang: string;
-}
-
 export interface ASRRequest {
   file_path: string;
   language: string;
@@ -42,9 +35,73 @@ export interface DocumentsRequest {
   tgt_lang: string;
 }
 
+export interface VisionRequest {
+  file_path: string;
+  query?: string;
+  src_lang?: string;
+  tgt_lang?: string;
+}
+
 // Interface for API responses (generic, as exact response shape may vary)
 export interface ApiResponse {
   [key: string]: any;
+}
+
+// Language options mapping
+const languageOptions: { name: string; code: string }[] = [
+  { name: "English", code: "eng_Latn" },
+  { name: "Kannada", code: "kan_Knda" },
+  { name: "Hindi", code: "hin_Deva" },
+  { name: "Assamese", code: "asm_Beng" },
+  { name: "Bengali", code: "ben_Beng" },
+  { name: "Gujarati", code: "guj_Gujr" },
+  { name: "Malayalam", code: "mal_Mlym" },
+  { name: "Marathi", code: "mar_Deva" },
+  { name: "Odia", code: "ory_Orya" },
+  { name: "Punjabi", code: "pan_Guru" },
+  { name: "Tamil", code: "tam_Taml" },
+  { name: "Telugu", code: "tel_Telu" },
+  { name: "German", code: "deu_Latn" },
+];
+
+// Create dictionaries for language name to code and code to code mapping
+const langNameToCode: Record<string, string> = {};
+const langCodeToCode: Record<string, string> = {};
+
+languageOptions.forEach(({ name, code }) => {
+  langNameToCode[name.toLowerCase()] = code;
+  langCodeToCode[code] = code;
+});
+
+function normalizeLanguage(lang: string): string {
+  const langNormalized = lang.trim();
+  const langLower = langNormalized.toLowerCase();
+
+  // Check if input is a language name (case-insensitive)
+  if (langNameToCode[langLower]) {
+    return langNameToCode[langLower];
+  }
+
+  // Check if input is a language code
+  if (langCodeToCode[langNormalized]) {
+    return langCodeToCode[langNormalized];
+  }
+
+  // Raise error if language is not supported
+  const supportedLangs = [
+    ...Object.keys(langNameToCode),
+    ...Object.keys(langCodeToCode),
+  ];
+  throw new Error(
+    `Unsupported language: ${lang}. Supported languages: ${supportedLangs.join(', ')}`
+  );
+}
+
+class DwaniAPIError extends Error {
+  constructor(response: any) {
+    super(`API error: ${response?.data?.error || 'Unknown error'}`);
+    this.name = 'DwaniAPIError';
+  }
 }
 
 // Configuration class
@@ -59,7 +116,7 @@ class DwaniConfig {
     this.client = axios.create({
       baseURL: this.apiBase,
       headers: {
-        'X-API-KEY': this.apiKey,
+        'X-API-KEY': this.apiKey || '',
         'Content-Type': 'application/json',
       },
     });
@@ -74,6 +131,14 @@ class DwaniConfig {
       throw new Error('DWANI_API_BASE_URL is not set in environment variables');
     }
   }
+
+  // Headers method to match Python's client._headers()
+  public headers(): Record<string, string> {
+    return {
+      'X-API-KEY': this.apiKey || '',
+      'Content-Type': 'application/json',
+    };
+  }
 }
 
 // Chat module
@@ -87,17 +152,23 @@ class Chat {
    */
   public async create(params: ChatRequest): Promise<ApiResponse> {
     this.config.validate();
+    // Normalize languages
+    const normalizedParams = {
+      ...params,
+      src_lang: normalizeLanguage(params.src_lang),
+      tgt_lang: normalizeLanguage(params.tgt_lang),
+    };
     try {
-      const response = await this.config.client.post('/v1/indic_chat', params);
+      const response = await this.config.client.post('/v1/indic_chat', normalizedParams);
       return response.data;
     } catch (error: any) {
-      throw new Error(`Chat API error: ${error.response?.data?.error || error.message}`);
+      throw new DwaniAPIError(error.response || error);
     }
   }
 }
 
 // Vision module
-class Vision {
+export class Vision {
   constructor(private config: DwaniConfig) {}
 
   /**
@@ -107,19 +178,41 @@ class Vision {
    */
   public async caption(params: VisionRequest): Promise<ApiResponse> {
     this.config.validate();
+
+    // Normalize source and target languages with defaults
+    const srcLangCode = normalizeLanguage(params.src_lang || 'eng_Latn');
+    const tgtLangCode = normalizeLanguage(params.tgt_lang || 'kan_Knda');
+    const query = params.query || 'describe the image';
+
     try {
       const form = new FormData();
-      form.append('file', fs.createReadStream(params.file_path));
-      form.append('query', params.query);
-      form.append('src_lang', params.src_lang);
-      form.append('tgt_lang', params.tgt_lang);
-
-      const response = await this.config.client.post('/vision/caption', form, {
-        headers: form.getHeaders(),
+      form.append('file', fs.createReadStream(params.file_path), {
+        filename: params.file_path,
+        contentType: 'image/png',
       });
+      form.append('query', query);
+      form.append('src_lang', srcLangCode);
+      form.append('tgt_lang', tgtLangCode);
+
+      // Use relative path and let axios handle baseURL
+      const response = await this.config.client.post(
+        `/v1/indic_visual_query?src_lang=${srcLangCode}&tgt_lang=${tgtLangCode}`,
+        form,
+        {
+          headers: {
+            ...this.config.headers(),
+            ...form.getHeaders(),
+            accept: 'application/json',
+          },
+        }
+      );
+
       return response.data;
     } catch (error: any) {
-      throw new Error(`Vision API error: ${error.response?.data?.error || error.message}`);
+      if (error.response) {
+        throw new DwaniAPIError(error.response);
+      }
+      throw new Error(`Vision API error: ${error.message}`);
     }
   }
 }
@@ -135,17 +228,26 @@ class ASR {
    */
   public async transcribe(params: ASRRequest): Promise<ApiResponse> {
     this.config.validate();
+    // Normalize language
+    const languageCode = normalizeLanguage(params.language);
     try {
       const form = new FormData();
       form.append('file', fs.createReadStream(params.file_path));
-      form.append('language', params.language);
+      form.append('language', languageCode);
 
-      const response = await this.config.client.post('/asr/transcribe', form, {
-        headers: form.getHeaders(),
-      });
+      const response = await this.config.client.post(
+        `/v1/transcribe?language=${languageCode}`,
+        form,
+        {
+          headers: {
+            ...this.config.headers(),
+            ...form.getHeaders(),
+          },
+        }
+      );
       return response.data;
     } catch (error: any) {
-      throw new Error(`ASR API error: ${error.response?.data?.error || error.message}`);
+      throw new DwaniAPIError(error.response || error);
     }
   }
 }
@@ -162,12 +264,13 @@ class Audio {
   public async speech(params: TTSRequest): Promise<Buffer> {
     this.config.validate();
     try {
-      const response = await this.config.client.post('/audio/speech', params, {
+      const response = await this.config.client.post('/v1/audio/speech', params, {
+        headers: this.config.headers(),
         responseType: 'arraybuffer',
       });
       return Buffer.from(response.data);
     } catch (error: any) {
-      throw new Error(`TTS API error: ${error.response?.data?.error || error.message}`);
+      throw new DwaniAPIError(error.response || error);
     }
   }
 }
@@ -183,11 +286,17 @@ class Translate {
    */
   public async run_translate(params: TranslateRequest): Promise<ApiResponse> {
     this.config.validate();
+    // Normalize languages
+    const normalizedParams = {
+      ...params,
+      src_lang: normalizeLanguage(params.src_lang),
+      tgt_lang: normalizeLanguage(params.tgt_lang),
+    };
     try {
-      const response = await this.config.client.post('/translate', params);
+      const response = await this.config.client.post('/v1/translate', normalizedParams);
       return response.data;
     } catch (error: any) {
-      throw new Error(`Translate API error: ${error.response?.data?.error || error.message}`);
+      throw new DwaniAPIError(error.response || error);
     }
   }
 }
@@ -203,19 +312,25 @@ class Documents {
    */
   public async run_extract(params: DocumentsRequest): Promise<ApiResponse> {
     this.config.validate();
+    // Normalize languages
+    const srcLangCode = normalizeLanguage(params.src_lang);
+    const tgtLangCode = normalizeLanguage(params.tgt_lang);
     try {
       const form = new FormData();
       form.append('file', fs.createReadStream(params.file_path));
       form.append('page_number', params.page_number.toString());
-      form.append('src_lang', params.src_lang);
-      form.append('tgt_lang', params.tgt_lang);
+      form.append('src_lang', srcLangCode);
+      form.append('tgt_lang', tgtLangCode);
 
-      const response = await this.config.client.post('/documents/extract', form, {
-        headers: form.getHeaders(),
+      const response = await this.config.client.post('/v1/indic-extract-text', form, {
+        headers: {
+          ...this.config.headers(),
+          ...form.getHeaders(),
+        },
       });
       return response.data;
     } catch (error: any) {
-      throw new Error(`Documents API error: ${error.response?.data?.error || error.message}`);
+      throw new DwaniAPIError(error.response || error);
     }
   }
 }
