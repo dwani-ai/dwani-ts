@@ -1,9 +1,19 @@
-Dwani TypeScript SDK
+dwani TypeScript SDK
 
+- Install Library
 ```bash
-npm install dwani-sdk typescript @types/node
+npm install dwani typescript @types/node
 ```
 
+- Compile the code
+```bash
+npx tsc
+```
+
+- Run the example
+```
+node dist/example.js
+```
 
 
 <!-- 
