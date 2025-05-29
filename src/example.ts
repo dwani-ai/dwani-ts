@@ -1,11 +1,11 @@
 import dwani from 'dwani';
 import * as fs from 'fs/promises';
-import { ChatRequest, VisionRequest, ASRRequest, TTSRequest, TranslateRequest, DocumentsRequest } from 'dwani';
+//import { ChatRequest, VisionRequest, ASRRequest, TTSRequest, TranslateRequest, DocumentsRequest } from 'dwani';
 
 async function main() {
   try {
     // Chat example: Multilingual conversation
-    const chatParams: ChatRequest = {
+    const chatParams: dwani.ChatRequest = {
       prompt: 'What is the capital of France?',
       src_lang: 'eng_Latn',
       tgt_lang: 'kan_Knda',
@@ -14,7 +14,7 @@ async function main() {
     console.log('Chat Response:', JSON.stringify(chatResponse, null, 2));
 
     // Vision example: Image captioning
-    const visionParams: VisionRequest = {
+    const visionParams: dwani.VisionRequest = {
       file_path: './sample_image.jpg',
       query: 'Describe the contents of this image in detail.',
       src_lang: 'eng_Latn',
@@ -24,7 +24,7 @@ async function main() {
     console.log('Vision Response:', JSON.stringify(visionResponse, null, 2));
 
     // ASR example: Audio transcription
-    const asrParams: ASRRequest = {
+    const asrParams: dwani.ASRRequest = {
       file_path: './sample_audio.wav',
       language: 'french',
     };
@@ -32,7 +32,7 @@ async function main() {
     console.log('ASR Response:', JSON.stringify(asrResponse, null, 2));
 
     // TTS example: Text-to-speech conversion
-    const ttsParams: TTSRequest = {
+    const ttsParams: dwani.TTSRequest = {
       input: 'Bonjour, comment allez-vous?',
       response_format: 'mp3',
     };
@@ -41,7 +41,7 @@ async function main() {
     console.log('TTS: Audio saved to output_audio.mp3');
 
     // Translation example: Sentence translation
-    const translateParams: TranslateRequest = {
+    const translateParams: dwani.TranslateRequest = {
       sentences: ['The weather is nice today.', 'I am learning TypeScript.'],
       src_lang: 'eng_Latn',
       tgt_lang: 'spa_Latn',
@@ -50,7 +50,7 @@ async function main() {
     console.log('Translation Response:', JSON.stringify(translateResponse, null, 2));
 
     // Documents example: PDF text extraction
-    const docParams: DocumentsRequest = {
+    const docParams: dwani.DocumentsRequest = {
       file_path: './sample_document.pdf',
       page_number: 1,
       src_lang: 'eng_Latn',
