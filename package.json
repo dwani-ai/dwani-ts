@@ -5,8 +5,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc && npm run copy-samples",
-    "copy-samples": "fs-extra-copy src/samples dist/samples",
+    "build": "tsc",
     "prepublishOnly": "npm run build"
   },
   "keywords": [
