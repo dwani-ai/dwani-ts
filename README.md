@@ -31,6 +31,24 @@ npx tsc example.ts
 node example.js
 ```
 
+```bash
+src/
+├── config/
+│   └── dwaniConfig.ts       # DwaniConfig class and DwaniAPIError
+├── interfaces/
+│   └── requests.ts          # Interfaces (ChatRequest, VisionRequest, etc.)
+├── modules/
+│   ├── chat.ts              # Chat class
+│   ├── vision.ts            # Vision class
+│   ├── asr.ts               # ASR class
+│   ├── audio.ts             # Audio class
+│   ├── translate.ts         # Translate class
+│   ├── documents.ts         # Documents class
+├── utils/
+│   └── language.ts          # Language validation/normalization functions
+├── dwani.ts                 # Main Dwani class (entry point)
+└── index.ts                 # Re-export all public classes/interfaces
+```
 - Notes
   - File Uploads: The Vision, ASR, and Documents modules require file paths for uploads (e.g., images, audio, PDFs). Ensure files exist in your project directory.
   - TTS Output: The Audio.speech method returns a Buffer containing binary audio data. Use fs.writeFile to save it (e.g., as output.mp3).
