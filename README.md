@@ -1,5 +1,12 @@
 Dwani TypeScript SDK
 
+```bash
+npm install dwani-sdk typescript @types/node
+```
+
+
+<!-- 
+
 The Dwani TypeScript SDK is a Node.js library for interacting with the Dwani API, providing access to multimodal features such as Chat, Vision, Automatic Speech Recognition (ASR), Text-to-Speech (TTS), Translation, and Document extraction. This library mirrors the functionality of the Dwani Python SDK (european_language_support branch) and supports European languages (e.g., French: fra_Latn, German: deu_Latn, Spanish: spa_Latn, Italian: ita_Latn) in addition to other languages.
 Features
 
@@ -150,3 +157,4 @@ MIT License. See LICENSE for details.
 Contact
 
 For support, contact the Dwani team via their official website or API documentation.
+-->
