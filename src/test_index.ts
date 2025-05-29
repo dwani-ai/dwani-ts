@@ -20,14 +20,14 @@ async function main() {
       tgt_lang: 'kan_Knda',
     });
     console.log('Vision:', visionResponse);
-    /*
+    
     // ASR example
     const asrResponse = await dwani.ASR.transcribe({
-      file_path: './audio.wav',
-      language: 'french',
+      file_path: './samples/kannada_sample.wav',
+      language: 'kannada',
     });
     console.log('ASR:', asrResponse);
-
+/*
     // TTS example
     const ttsResponse = await dwani.Audio.speech({
       input: 'Bonjour le monde',

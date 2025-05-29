@@ -47,7 +47,7 @@ export interface ApiResponse {
   [key: string]: any;
 }
 
-// Language options mapping
+// Language options mapping for Vision, Chat, Translate, Documents
 const languageOptions: { name: string; code: string }[] = [
   { name: "English", code: "eng_Latn" },
   { name: "Kannada", code: "kan_Knda" },
@@ -191,8 +191,6 @@ export class Vision {
         contentType: 'image/png',
       });
       form.append('query', query);
-      form.append('src_lang', srcLangCode);
-      form.append('tgt_lang', tgtLangCode);
 
       // Use relative path and let axios handle baseURL
       const response = await this.config.client.post(
@@ -219,6 +217,40 @@ export class Vision {
 
 // ASR (Automatic Speech Recognition) module
 class ASR {
+  // Allowed languages for ASR
+  private static ALLOWED_LANGUAGES = [
+    "Assamese",
+    "Bengali",
+    "Gujarati",
+    "Hindi",
+    "Kannada",
+    "Malayalam",
+    "Marathi",
+    "Odia",
+    "Punjabi",
+    "Tamil",
+    "Telugu",
+    "English",
+    "German",
+  ];
+
+  // Validate language for ASR
+  private static validateLanguage(language: string): string {
+    const languageMap: Record<string, string> = {};
+    ASR.ALLOWED_LANGUAGES.forEach((lang) => {
+      languageMap[lang.toLowerCase()] = lang;
+    });
+
+    if (!languageMap[language.toLowerCase()]) {
+      throw new Error(
+        `Unsupported language: ${language}. Supported languages: ${ASR.ALLOWED_LANGUAGES.join(', ')}`
+      );
+    }
+
+    // Return lowercase language for API request
+    return language.toLowerCase();
+  }
+
   constructor(private config: DwaniConfig) {}
 
   /**
@@ -228,12 +260,11 @@ class ASR {
    */
   public async transcribe(params: ASRRequest): Promise<ApiResponse> {
     this.config.validate();
-    // Normalize language
-    const languageCode = normalizeLanguage(params.language);
+    // Validate and convert language to lowercase
+    const languageCode = ASR.validateLanguage(params.language);
     try {
       const form = new FormData();
       form.append('file', fs.createReadStream(params.file_path));
-      form.append('language', languageCode);
 
       const response = await this.config.client.post(
         `/v1/transcribe?language=${languageCode}`,
@@ -247,7 +278,10 @@ class ASR {
       );
       return response.data;
     } catch (error: any) {
-      throw new DwaniAPIError(error.response || error);
+      if (error.response) {
+        throw new DwaniAPIError(error.response);
+      }
+      throw new Error(`ASR API error: ${error.message}`);
     }
   }
 }
