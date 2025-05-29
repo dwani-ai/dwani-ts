@@ -12,6 +12,7 @@ npm install dwani-sdk typescript @types/node
   - npx tsc
   - rm -rf dist/
   - npm run build
+  - npm link
 
 
 -->

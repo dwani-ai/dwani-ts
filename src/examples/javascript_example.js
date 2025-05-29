@@ -1,4 +1,4 @@
-const dwani = require('dwani-sdk');
+const dwani = require('dwani-ts');
 const fs = require('fs').promises;
 
 async function main() {

@@ -1,4 +1,4 @@
-import dwani from 'dwani-sdk';
+import dwani from 'dwani-ts';
 import * as fs from 'fs/promises';
 import { ChatRequest, VisionRequest, ASRRequest, TTSRequest, TranslateRequest, DocumentsRequest } from 'dwani-sdk';
 
