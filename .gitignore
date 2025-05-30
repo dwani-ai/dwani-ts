@@ -3,6 +3,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+example.js
 *.mp3
 *.wav
 # C extensions
