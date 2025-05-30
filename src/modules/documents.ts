@@ -34,7 +34,7 @@ export class Documents {
 
       // Make API request
       const response = await this.config.client.post(
-        '/v1/indic-extract-text', // Ensure endpoint matches exactly
+        '/v1/indic-extract-text/', // Ensure endpoint matches exactly
         form,
         {
           headers: {

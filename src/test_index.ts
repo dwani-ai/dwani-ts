@@ -4,7 +4,7 @@ import { DwaniAPIError } from './index';
 async function main() {
   try {
     // Chat example
-    /*
+    
     const chatResponse = await dwani.Chat.create({
       prompt: 'Hello!',
       src_lang: 'eng_Latn',
@@ -21,7 +21,7 @@ async function main() {
       tgt_lang: 'kan_Knda',
     });
     console.log('Vision:', visionResponse);
-    */
+    
     /*
     // ASR example
     const asrResponse = await dwani.ASR.transcribe({
