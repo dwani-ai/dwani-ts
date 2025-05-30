@@ -3,12 +3,13 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+example.js
 *.mp3
 *.wav
 # C extensions
 *.so
 node_modules/
-!examples/kannada_sample.wav
+!samples/kannada_sample.wav
 
 # Distribution / packaging
 .Python

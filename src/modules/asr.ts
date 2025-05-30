@@ -13,7 +13,7 @@ export class ASR {
       form.append('file', fs.createReadStream(params.file_path));
 
       const response = await this.config.client.post(
-        `/v1/transcribe?language=${languageCode}`,
+        `/v1/transcribe/?language=${languageCode}`,
         form,
         {
           headers: {
