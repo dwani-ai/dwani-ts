@@ -24,6 +24,7 @@ Set Up Environment Variables: Create a .env file in your project root:
 - Compile the example code
 ```bash
 npx tsc example.ts
+node exampls.js
 ```
 
 - Run the example
