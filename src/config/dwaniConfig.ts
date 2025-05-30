@@ -1,12 +1,20 @@
+// dwaniConfig.ts
 import axios, { AxiosInstance } from 'axios';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
 
 export class DwaniAPIError extends Error {
-  constructor(response: any) {
-    super(`API error: ${response?.data?.error || 'Unknown error'}`);
+  public status?: number; // HTTP status code from API response
+  public code?: string;   // System-level error code (e.g., 'ECONNABORTED')
+  public data?: any;      // Additional error data from API response
+
+  constructor(error: { message: string; status?: number; code?: string; data?: any }) {
+    super(error.message || `API error: ${error.data?.error || 'Unknown error'}`);
     this.name = 'DwaniAPIError';
+    this.status = error.status;
+    this.code = error.code;
+    this.data = error.data;
   }
 }
 

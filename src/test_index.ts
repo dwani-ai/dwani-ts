@@ -1,9 +1,10 @@
 import dwani from './index';
 import * as fs from 'fs/promises';
-
+import { DwaniAPIError } from './index';
 async function main() {
   try {
     // Chat example
+    /*
     const chatResponse = await dwani.Chat.create({
       prompt: 'Hello!',
       src_lang: 'eng_Latn',
@@ -20,6 +21,7 @@ async function main() {
       tgt_lang: 'kan_Knda',
     });
     console.log('Vision:', visionResponse);
+    */
     /*
     // ASR example
     const asrResponse = await dwani.ASR.transcribe({
@@ -27,7 +29,7 @@ async function main() {
       language: 'kannada',
     });
     console.log('ASR:', asrResponse);
-*/
+
     // TTS example
     const ttsResponse = await dwani.Audio.speech({
       input: 'ಹಲೋ! ನಾನು ದ್ವಾನಿ, ಭಾರತಕ್ಕೆ, ವಿಶೇಷವಾಗಿ ಕರ್ನಾಟಕಕ್ಕೆ ಸಂಬಂಧಿಸಿದ ಮಾಹಿತಿಯೊಂದಿಗೆ ನಿಮಗೆ ಸಹಾಯ ಮಾಡಲು ಸಿದ್ಧನಿದ್ದೇನೆ.',
@@ -35,7 +37,7 @@ async function main() {
     });
     await fs.writeFile('output.mp3', ttsResponse);
     console.log('TTS: Audio saved to output.mp3');
-/*
+
     // Translation example
     const translateResponse = await dwani.Translate.run_translate({
       sentences: ['Hello'],
@@ -45,18 +47,25 @@ async function main() {
     console.log('Translate:', translateResponse);
 */
     // Documents example
-    /*
+    
     const docResponse = await dwani.Documents.run_extract({
-      file_path: './samples/document.pdf',
+      file_path: './samples/dwani-workshop.pdf',
       page_number: 1,
       src_lang: 'eng_Latn',
       tgt_lang: 'kan_Knda',
     });
     console.log('Documents:', docResponse);
 
-    */
+    
   } catch (error: any) {
     console.error('Error:', error.message);
+    if (error instanceof DwaniAPIError) {
+      console.error('API Error Details:', {
+        status: error.status,
+        code: error.code,
+        data: error.data,
+      });
+    }
   }
     
 }
