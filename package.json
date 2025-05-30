@@ -1,22 +1,41 @@
 {
   "name": "dwani",
-  "version": "0.0.1",
-  "main": "dist/index.ts",
+  "version": "0.0.3",
+  "description": "TypeScript SDK for the Dwani API, supporting Chat, Vision, ASR, TTS, Translation, and Documents",
+  "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "files": ["dist"],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc"
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
+  "keywords": [
+    "dwani",
+    "api",
+    "typescript",
+    "chat",
+    "vision",
+    "asr",
+    "tts",
+    "translation",
+    "documents"
+  ],
+  "author": "sachin <npm@dwani.ai>",
+  "license": "MIT",
   "dependencies": {
-    "axios": "^1.9.0"
+    "axios": "^1.7.2",
+    "dotenv": "^16.4.5",
+    "form-data": "^4.0.0",
+    "fs-extra": "^11.3.0"
   },
   "devDependencies": {
-    "@types/node": "^22.15.17",
-    "typescript": "^5.8.3"
+    "@types/node": "^20.14.10",
+    "typescript": "^5.5.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dwani-ai/dwani-ts.git"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
