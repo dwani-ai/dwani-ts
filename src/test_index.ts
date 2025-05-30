@@ -7,8 +7,8 @@ async function main() {
     
     const chatResponse = await dwani.Chat.create({
       prompt: 'Hello!',
-      src_lang: 'eng_Latn',
-      tgt_lang: 'kan_Knda',
+      src_lang: 'english',
+      tgt_lang: 'kannada',
     });
     console.log('Chat:', chatResponse);
 
@@ -17,8 +17,8 @@ async function main() {
     const visionResponse = await dwani.Vision.caption({
       file_path: './samples/image.png',
       query: 'Describe this image',
-      src_lang: 'eng_Latn',
-      tgt_lang: 'kan_Knda',
+      src_lang: 'english',
+      tgt_lang: 'kannada',
     });
     console.log('Vision:', visionResponse);
     
@@ -41,8 +41,8 @@ async function main() {
   // Translation example
     const translateResponse = await dwani.Translate.run_translate({
       sentences: ['Hello'],
-      src_lang: 'eng_Latn',
-      tgt_lang: 'kan_Knda',
+      src_lang: 'english',
+      tgt_lang: 'kannada',
     });
     console.log('Translate:', translateResponse);
 
@@ -51,8 +51,8 @@ async function main() {
     const docResponse = await dwani.Documents.run_extract({
       file_path: './samples/dwani-workshop.pdf',
       page_number: 1,
-      src_lang: 'eng_Latn',
-      tgt_lang: 'kan_Knda',
+      src_lang: 'english',
+      tgt_lang: 'kannada',
     });
     console.log('Documents:', docResponse);
 
