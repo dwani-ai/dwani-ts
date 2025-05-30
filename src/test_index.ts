@@ -20,22 +20,22 @@ async function main() {
       tgt_lang: 'kan_Knda',
     });
     console.log('Vision:', visionResponse);
-    
+    /*
     // ASR example
     const asrResponse = await dwani.ASR.transcribe({
       file_path: './samples/kannada_sample.wav',
       language: 'kannada',
     });
     console.log('ASR:', asrResponse);
-/*
+*/
     // TTS example
     const ttsResponse = await dwani.Audio.speech({
-      input: 'Bonjour le monde',
+      input: 'ಹಲೋ! ನಾನು ದ್ವಾನಿ, ಭಾರತಕ್ಕೆ, ವಿಶೇಷವಾಗಿ ಕರ್ನಾಟಕಕ್ಕೆ ಸಂಬಂಧಿಸಿದ ಮಾಹಿತಿಯೊಂದಿಗೆ ನಿಮಗೆ ಸಹಾಯ ಮಾಡಲು ಸಿದ್ಧನಿದ್ದೇನೆ.',
       response_format: 'mp3',
     });
     await fs.writeFile('output.mp3', ttsResponse);
     console.log('TTS: Audio saved to output.mp3');
-
+/*
     // Translation example
     const translateResponse = await dwani.Translate.run_translate({
       sentences: ['Hello'],

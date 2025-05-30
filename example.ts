@@ -18,7 +18,7 @@ async function main() {
       file_path: './sample_image.jpg',
       query: 'Describe the contents of this image in detail.',
       src_lang: 'eng_Latn',
-      tgt_lang: 'deu_Latn',
+      tgt_lang: 'kan_Knda',
     };
     const visionResponse = await dwani.Vision.caption(visionParams);
     console.log('Vision Response:', JSON.stringify(visionResponse, null, 2));
@@ -26,14 +26,14 @@ async function main() {
     // ASR example: Audio transcription
     const asrParams: dwani.ASRRequest = {
       file_path: './sample_audio.wav',
-      language: 'french',
+      language: 'kannada',
     };
     const asrResponse = await dwani.ASR.transcribe(asrParams);
     console.log('ASR Response:', JSON.stringify(asrResponse, null, 2));
 
     // TTS example: Text-to-speech conversion
     const ttsParams: dwani.TTSRequest = {
-      input: 'Bonjour, comment allez-vous?',
+      input: 'ಹಲೋ! ನಾನು ದ್ವಾನಿ, ಭಾರತಕ್ಕೆ, ವಿಶೇಷವಾಗಿ ಕರ್ನಾಟಕಕ್ಕೆ ಸಂಬಂಧಿಸಿದ ಮಾಹಿತಿಯೊಂದಿಗೆ ನಿಮಗೆ ಸಹಾಯ ಮಾಡಲು ಸಿದ್ಧನಿದ್ದೇನೆ.',
       response_format: 'mp3',
     };
     const ttsResponse = await dwani.Audio.speech(ttsParams);
