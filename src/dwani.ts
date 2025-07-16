@@ -14,13 +14,13 @@ export class Dwani {
   public Translate: Translate;
   public Documents: Documents;
 
-  constructor() {
-    const config = new DwaniConfig();
-    this.Chat = new Chat(config);
-    this.Vision = new Vision(config);
-    this.ASR = new ASR(config);
-    this.Audio = new Audio(config);
-    this.Translate = new Translate(config);
-    this.Documents = new Documents(config);
+  constructor(config?: DwaniConfig) {
+    const dwaniConfig = config || new DwaniConfig();
+    this.Chat = new Chat(dwaniConfig);
+    this.Vision = new Vision(dwaniConfig);
+    this.ASR = new ASR(dwaniConfig);
+    this.Audio = new Audio(dwaniConfig);
+    this.Translate = new Translate(dwaniConfig);
+    this.Documents = new Documents(dwaniConfig);
   }
 }
