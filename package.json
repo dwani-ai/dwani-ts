@@ -1,6 +1,6 @@
 {
   "name": "dwani",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "TypeScript SDK for the Dwani API, supporting Chat, Vision, ASR, TTS, Translation, and Documents",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

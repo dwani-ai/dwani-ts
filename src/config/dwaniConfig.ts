@@ -1,13 +1,9 @@
-// dwaniConfig.ts
 import axios, { AxiosInstance } from 'axios';
-import * as dotenv from 'dotenv';
-
-dotenv.config();
 
 export class DwaniAPIError extends Error {
-  public status?: number; // HTTP status code from API response
-  public code?: string;   // System-level error code (e.g., 'ECONNABORTED')
-  public data?: any;      // Additional error data from API response
+  public status?: number;
+  public code?: string;
+  public data?: any;
 
   constructor(error: { message: string; status?: number; code?: string; data?: any }) {
     super(error.message || `API error: ${error.data?.error || 'Unknown error'}`);
@@ -23,31 +19,30 @@ export class DwaniConfig {
   private apiBase: string;
   public client: AxiosInstance;
 
-  constructor() {
-    this.apiKey = process.env.DWANI_API_KEY || null;
-    this.apiBase = process.env.DWANI_API_BASE_URL || 'https://dwani.aip.dwani.123';
+  constructor(apiKey?: string, apiBase?: string) {
+    this.apiKey = apiKey || process.env.DWANI_API_KEY || null;
+    this.apiBase = apiBase || process.env.DWANI_API_BASE_URL || '';
     this.client = axios.create({
       baseURL: this.apiBase,
-      headers: {
-        'X-API-KEY': this.apiKey || '',
-        'Content-Type': 'application/json',
-      },
+      headers: { 'X-API-KEY': this.apiKey || '' },
     });
   }
 
   public validate(): void {
     if (!this.apiKey) {
-      throw new Error('DWANI_API_KEY is not set in environment variables');
+      throw new Error('DWANI_API_KEY is not set in environment variables or constructor');
     }
     if (!this.apiBase) {
-      throw new Error('DWANI_API_BASE_URL is not set in environment variables');
+      throw new Error('DWANI_API_BASE_URL is not set in environment variables or constructor');
+    }
+    try {
+      new URL(this.apiBase);
+    } catch {
+      throw new Error(`Invalid DWANI_API_BASE_URL: ${this.apiBase}`);
     }
   }
 
   public headers(): Record<string, string> {
-    return {
-      'X-API-KEY': this.apiKey || '',
-      'Content-Type': 'application/json',
-    };
+    return { 'X-API-KEY': this.apiKey || '' };
   }
 }

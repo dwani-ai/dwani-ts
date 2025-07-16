@@ -16,7 +16,12 @@ export class Chat {
       const response = await this.config.client.post('/v1/indic_chat', normalizedParams);
       return response.data;
     } catch (error: any) {
-      throw new DwaniAPIError(error.response || error);
+      throw new DwaniAPIError({
+        message: error.message,
+        status: error.response?.status,
+        code: error.code,
+        data: error.response?.data,
+      });
     }
   }
 }
